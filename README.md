@@ -1,5 +1,10 @@
 # Markdown Parser and HTML Renderer for Go
 
+Philip Note:  The intent is to make this render `.rtf` in a decent and fast way with
+the possibility of including the `.rtf` section into a template.   This is a fork of
+both the markdown package and the main program from  
+in `./cli/mdtohtml`.
+
 [![pkg.go.dev](https://pkg.go.dev/badge/github.com/gomarkdown/markdown)](https://pkg.go.dev/github.com/gomarkdown/markdown)
 
 Package `github.com/gomarkdown/markdown` is a Go library for parsing Markdown text and rendering as HTML.
