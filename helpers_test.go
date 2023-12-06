@@ -7,8 +7,9 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/gomarkdown/markdown/html"
-	"github.com/gomarkdown/markdown/parser"
+	"github.com/pschlump/dbgo"
+	"github.com/pschlump/markdown/html"
+	"github.com/pschlump/markdown/parser"
 )
 
 type TestParams struct {
@@ -56,8 +57,8 @@ func doTestsParam(t *testing.T, tests []string, params TestParams) {
 		expected := tests[i+1]
 		got := runMarkdown(input, params)
 		if got != expected {
-			t.Errorf("\nInput   [%#v]\nExpected[%#v]\nGot     [%#v]\nInput:\n%s\nExpected:\n%s\nGot:\n%s\n",
-				input, expected, got, input, expected, got)
+			t.Errorf("\nInput   [%#v]\nExpected[%#v]\nGot     [%#v]\nInput:\n%s\nExpected:\n%s\nGot:\n%s\nTest From:%s\n",
+				input, expected, got, input, expected, got, dbgo.LF(-2))
 		}
 	}
 }

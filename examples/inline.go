@@ -5,9 +5,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/gomarkdown/markdown"
-	"github.com/gomarkdown/markdown/ast"
-	"github.com/gomarkdown/markdown/parser"
+	"github.com/pschlump/markdown"
+	"github.com/pschlump/markdown/ast"
+	"github.com/pschlump/markdown/parser"
 
 	"bytes"
 	"net/url"

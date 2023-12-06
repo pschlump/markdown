@@ -4,9 +4,9 @@ import (
 	"io"
 	"testing"
 
-	"github.com/gomarkdown/markdown/ast"
-	"github.com/gomarkdown/markdown/html"
-	"github.com/gomarkdown/markdown/parser"
+	"github.com/pschlump/markdown/ast"
+	"github.com/pschlump/markdown/html"
+	"github.com/pschlump/markdown/parser"
 )
 
 func renderHookEmpty(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
