@@ -19,14 +19,6 @@ import (
 // Flags control optional behavior of HTML renderer.
 type Flags int
 
-var doRtf = false
-
-var d *rtfdoc.Document
-
-func init() {
-	var d = rtfdoc.NewDocument()
-}
-
 // IDTag is the tag used for tag identification, it defaults to "id", some renderers
 // may wish to override this and use e.g. "anchor".
 var IDTag = "id"
@@ -130,7 +122,7 @@ type RendererOptions struct {
 	Generator string
 
 	// New RTF Config
-	IsRtf bool // 	DoRtf: opts&FlagDoRtf != 0, -- Turn on RTF
+	IsRtf bool // 	DoRTF: opts&FlagDoRTF != 0, -- Turn on RTF
 }
 
 // Renderer implements Renderer interface for HTML output.
@@ -246,8 +238,9 @@ func NewRenderer(opts RendererOptions) *Renderer {
 	}
 
 	var d *rtfdoc.Document //	Where the document is sent to in the middle of processing.  Will be flushed to a file at the end.
-	if opts&FlagDoRtf != 0 {
+	if opts.Flags&FlagDoRTF != 0 {
 		d = rtfdoc.NewDocument()
+		d.SetOrientation(rtfdoc.OrientationPortrait)
 	}
 
 	return &Renderer{
@@ -258,7 +251,7 @@ func NewRenderer(opts RendererOptions) *Renderer {
 
 		sr: NewSmartypantsRenderer(opts.Flags),
 
-		IsRtf:  opts&FlagDoRtf != 0,
+		// IsRTF:  opts.Flags&FlagDoRTF != 0,
 		RtfOut: d,
 	}
 }
@@ -459,8 +452,9 @@ func (r *Renderer) OutHRTag(w io.Writer, attrs []string) {
 
 // Text writes ast.Text node
 func (r *Renderer) Text(w io.Writer, text *ast.Text) {
-	if doRtf {
-		p.AddText(text.Literal, 16, rtfdoc.FontTimesNewRoman, rtfdoc.ColorBlack)
+	if r.Opts.Flags&FlagDoRTF != 0 {
+		p := r.RtfOut.AddParagraph()
+		p.AddText(string(text.Literal), 16, rtfdoc.FontTimesNewRoman, rtfdoc.ColorBlack) // 16 is font size.
 	} else {
 		if r.Opts.Flags&Smartypants != 0 {
 			var tmp bytes.Buffer
@@ -1377,4 +1371,5 @@ func TagWithAttributes(name string, attrs []string) string {
 
 func (r *Renderer) RenderFlush(w io.Writer) {
 	// Do Something - the data is written to an in-memory buffer and now must be written to 'w'.
+	fmt.Fprintf(w, "%s\n", string(r.RtfOut.Export()))
 }
