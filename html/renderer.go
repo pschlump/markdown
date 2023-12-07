@@ -1337,3 +1337,7 @@ func TagWithAttributes(name string, attrs []string) string {
 	}
 	return s + ">"
 }
+
+func (r *Renderer) RenderFlush(w io.Writer) {
+	// Do Nothing - for HTML alas is written on the fly.
+}

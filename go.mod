@@ -17,6 +17,7 @@ require (
 	github.com/pschlump/ansi v1.0.1 // indirect
 	github.com/pschlump/filelib v1.0.6 // indirect
 	github.com/pschlump/json v0.0.0-20180316172947-0d2e6a308e08 // indirect
+	github.com/therox/rtf-doc v0.8.27 // indirect
 	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
 )

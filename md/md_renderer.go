@@ -376,3 +376,7 @@ func (r *Renderer) RenderHeader(w io.Writer, ast ast.Node) {
 func (r *Renderer) RenderFooter(w io.Writer, ast ast.Node) {
 	// do nothing
 }
+
+func (r *Renderer) RenderFlush(w io.Writer) {
+	// Do Nothing - for MD alas is written on the fly.
+}

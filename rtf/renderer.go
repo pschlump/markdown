@@ -12,10 +12,20 @@ import (
 
 	"github.com/pschlump/markdown/ast"
 	"github.com/pschlump/markdown/parser"
+
+	rtfdoc "github.com/therox/rtf-doc"
 )
 
 // Flags control optional behavior of HTML renderer.
 type Flags int
+
+var doRtf = false
+
+var d *rtfdoc.Document
+
+func init() {
+	var d = rtfdoc.NewDocument()
+}
 
 // IDTag is the tag used for tag identification, it defaults to "id", some renderers
 // may wish to override this and use e.g. "anchor".
@@ -44,7 +54,8 @@ const (
 	SmartypantsQuotesNBSP                     // Enable « French guillemets » (with Smartypants)
 	TOC                                       // Generate a table of contents
 	LazyLoadImages                            // Include loading="lazy" with images
-	RTFTemplate                               // PJS: Output to be placed into a template (Similar to CompletePage)
+	FlagRTFTemplate                           // PJS: Output to be placed into a template (Similar to CompletePage)
+	FlagDoRTF                                 //
 
 	CommonFlags Flags = Smartypants | SmartypantsFractions | SmartypantsDashes | SmartypantsLatexDashes
 )
@@ -117,6 +128,9 @@ type RendererOptions struct {
 	// Generator is a meta tag that is inserted in the generated HTML so show what rendered it. It should not include the closing tag.
 	// Defaults (note content quote is not closed) to `  <meta name="GENERATOR" content="github.com/pschlump/markdown markdown processor for Go`
 	Generator string
+
+	// New RTF Config
+	IsRtf bool // 	DoRtf: opts&FlagDoRtf != 0, -- Turn on RTF
 }
 
 // Renderer implements Renderer interface for HTML output.
@@ -143,6 +157,9 @@ type Renderer struct {
 	sr *SPRenderer
 
 	documentMatter ast.DocumentMatters // keep track of front/main/back matter.
+
+	// New RTF buffer
+	RtfOut *rtfdoc.Document //	Where the document is sent to in the middle of processing.  Will be flushed to a file at the end.
 }
 
 // Escaper defines how to escape HTML special characters
@@ -228,6 +245,11 @@ func NewRenderer(opts RendererOptions) *Renderer {
 		opts.Generator = `  <meta name="GENERATOR" content="github.com/pschlump/markdown markdown processor for Go`
 	}
 
+	var d *rtfdoc.Document //	Where the document is sent to in the middle of processing.  Will be flushed to a file at the end.
+	if opts&FlagDoRtf != 0 {
+		d = rtfdoc.NewDocument()
+	}
+
 	return &Renderer{
 		Opts: opts,
 
@@ -235,6 +257,9 @@ func NewRenderer(opts RendererOptions) *Renderer {
 		headingIDs: make(map[string]int),
 
 		sr: NewSmartypantsRenderer(opts.Flags),
+
+		IsRtf:  opts&FlagDoRtf != 0,
+		RtfOut: d,
 	}
 }
 
@@ -434,16 +459,20 @@ func (r *Renderer) OutHRTag(w io.Writer, attrs []string) {
 
 // Text writes ast.Text node
 func (r *Renderer) Text(w io.Writer, text *ast.Text) {
-	if r.Opts.Flags&Smartypants != 0 {
-		var tmp bytes.Buffer
-		EscapeHTML(&tmp, text.Literal)
-		r.sr.Process(w, tmp.Bytes())
+	if doRtf {
+		p.AddText(text.Literal, 16, rtfdoc.FontTimesNewRoman, rtfdoc.ColorBlack)
 	} else {
-		_, parentIsLink := text.Parent.(*ast.Link)
-		if parentIsLink {
-			EscLink(w, text.Literal)
+		if r.Opts.Flags&Smartypants != 0 {
+			var tmp bytes.Buffer
+			EscapeHTML(&tmp, text.Literal)
+			r.sr.Process(w, tmp.Bytes())
 		} else {
-			EscapeHTML(w, text.Literal)
+			_, parentIsLink := text.Parent.(*ast.Link)
+			if parentIsLink {
+				EscLink(w, text.Literal)
+			} else {
+				EscapeHTML(w, text.Literal)
+			}
 		}
 	}
 }
@@ -1344,4 +1373,8 @@ func TagWithAttributes(name string, attrs []string) string {
 		s += " " + strings.Join(attrs, " ")
 	}
 	return s + ">"
+}
+
+func (r *Renderer) RenderFlush(w io.Writer) {
+	// Do Something - the data is written to an in-memory buffer and now must be written to 'w'.
 }

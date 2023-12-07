@@ -39,6 +39,9 @@ type Renderer interface {
 
 	// RenderFooter is a symmetric counterpart of RenderHeader.
 	RenderFooter(w io.Writer, ast ast.Node)
+
+	// Flush out any buffes at the end of rendering.
+	RenderFlush(w io.Writer)
 }
 
 // Parse parsers a markdown document using provided parser. If parser is nil,
