@@ -1,0 +1,1665 @@
+body {
+  background: white;
+  color: #333;
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+  /* font-size: 11pt; */
+  /* line-height: 1.5; */
+  /* margin: 0px 16px 0px 16px; */
+  margin: 0;
+  padding: 0;
+  padding-bottom: 2em; /* account for ad at the bottom */
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  font-weight: 600;
+  margin-bottom: 4pt;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 0.75em;
+}
+
+h1 {
+  font-size: 1.875rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+img {
+  border: 0;
+}
+
+blockquote {
+  font-style: italic;
+}
+
+div#tophdr {
+  font-size: 10pt;
+  font-weight: bold;
+  margin: 0px;
+  padding: 6pt;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+div.centered {
+  text-align: center;
+}
+
+div.centered table {
+  margin: 0 auto;
+  text-align: left;
+}
+
+#content {
+  display: flex;
+  justify-content: center;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
+.lvl1 {
+  margin-left: 1em;
+}
+
+.lvl2 {
+  margin-left: 2em;
+}
+
+.lvl3 {
+  margin-left: 3em;
+}
+
+.lvl4 {
+  margin-left: 4em;
+}
+
+.column-list {
+  display: flex;
+  width: 100%;
+}
+
+/* size all columns equally */
+.column-list > div {
+  flex: 1;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  column-gap: 4px;
+  row-gap: 8px;
+  margin-block-end: 0.5em !important;
+}
+
+a {
+  color: #0894f1;
+  background: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  /* color: #044978; */
+  color: #054d7d;
+  /* text-decoration: underline; */
+  /* background-color: rgba(173, 216, 230, 0.094); */
+}
+
+.taglink {
+  color: gray;
+  text-decoration: none;
+}
+
+a.taglink:hover {
+  text-decoration: underline;
+}
+
+.article-header {
+  margin-top: 16px;
+}
+
+.tryonline {
+  font-size: 80%;
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  color: black;
+  border: 1px solid gray;
+}
+
+.tryonline:hover {
+  color: black;
+  background-color: lightgray;
+}
+
+.hdr-image:hover {
+  filter: grayscale(100%);
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.wrap {
+  width: calc(100% - 2rem);
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.selected-img {
+  border: 1px solid lightskyblue;
+}
+
+.img-wrapper-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.img-wrapper {
+  position: relative;
+}
+
+.img-wrapper > img {
+  object-fit: scale-down;
+  max-width: 95vw;
+  max-height: 480px;
+}
+
+.nav-icon-left {
+  position: absolute;
+  left: -16px;
+  top: calc(50% - 24px);
+}
+
+.nav-icon-right {
+  position: absolute;
+  right: -16px;
+  top: calc(50% - 24px);
+}
+
+a.for-nav-icon {
+  display: flex;
+
+  text-decoration: none;
+  font-size: 0px;
+  justify-content: center;
+  align-items: center;
+
+  fill: gray;
+  width: 40px;
+  height: 40px;
+
+  border-radius: 24px;
+  background-color: hsl(0, 0%, 100%);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3), 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+a.for-nav-icon:hover {
+  fill: #555;
+  background-color: hsl(0, 0%, 95%);
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+  display: block;
+}
+
+.ib {
+  display: inline-block;
+}
+
+/* https://stackoverflow.com/questions/19390690/css-media-queries-to-hide-and-show-page-elements
+TODO: it still loads the image if it's inside div hidden with this trick, at least in Chrome's device simulator
+See: https://timkadlec.com/2012/04/media-query-asset-downloading-results/
+*/
+@media only screen and (max-width: 767px),
+  only screen and (max-device-width: 767px) {
+  .hide-mobile {
+    display: none;
+  }
+}
+
+/* based on https://gomakethings.com/how-to-break-an-image-out-of-its-parent-container-with-css/ */
+
+/* .page-cover-image {
+  left: calc(50% - 8px);
+  margin-left: -50vw;
+  margin-right: -50vw;
+  max-width: 100vw;
+  position: relative;
+  right: 50%;
+  width: 100vw;
+  overflow: hidden;
+
+  height: 30vh;
+  object-fit: cover;
+  display: block;
+  width: 100vw;
+  margin-top: 10px;
+} */
+
+.page-cover-image {
+  /* margin-top: 12px; */
+  width: 100%;
+}
+
+/* if changing size to a different value, also update default.css if .CoverImageURL */
+/* https://internetingishard.com/html-and-css/responsive-images/ */
+@media (max-width: 768px) {
+  .page-cover-image {
+    display: none;
+  }
+}
+
+.table_of_contents-item {
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.3;
+  padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+  margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+  margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+  margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+  text-decoration: none;
+  opacity: 0.7;
+  border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+nav div {
+  margin-block-end: 0 !important;
+}
+
+.block-color-gray {
+  color: rgba(55, 53, 47, 0.6);
+  fill: rgba(55, 53, 47, 0.6);
+}
+
+.article-meta {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  padding-top: 1em;
+
+  color: gray;
+  font-size: 0.9em;
+}
+
+.article-meta > div {
+  flex: 1 0 0;
+}
+
+.article-meta > div:nth-child(2) {
+  text-align: center;
+  font-size: 1.1em;
+  flex-grow: 0;
+  flex-shrink: 1;
+}
+
+.article-meta > div:nth-child(3) {
+  text-align: right;
+}
+
+div.indented {
+  margin-left: 1em;
+}
+
+div#post div {
+  min-height: 1em;
+  /* line-height: 1.5em; */
+  margin-block-start: 0;
+  margin-block-end: 0.5em;
+}
+
+div#post div.page {
+  margin-block-end: 0;
+}
+
+.relative {
+  position: relative;;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.notion-callout {
+  background-color: #efefef;
+  padding: 0.5em 0.5em;
+}
+
+.notion-page {
+  padding-top: 1em; /* TODO: why margin-top doesn't work? */
+  /* background-image: linear-gradient(180deg,#e7f8f3,#fff); */
+}
+
+.notion-figure-icon-wrap {
+  padding-right: 0.3em;
+}
+
+.notion-date {
+  opacity: 0.5;
+}
+
+.notion-video {
+  max-width: 100%;
+}
+
+hr.notion-divider {
+  margin-top: 1em;
+  margin-bottom: 1em;
+
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
+/* Note: there might be more elements we need to add here */
+details.notion-toggle > div,
+details.notion-toggle > details {
+  margin-left: 1.4em;
+}
+
+/* neutralize dy margin at the top and the bottom of lists
+   when nested inside toggle list */
+details.notion-toggle > ul,
+details.notion-toggle > ol {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+details.notion-toggle > summary::-webkit-details-marker:hover {
+  color: gray;
+  cursor: pointer;
+}
+
+img.notion-image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+}
+
+div.column-list {
+  display: flex;
+  width: 100%;
+}
+
+/* size all columns equally */
+div.column {
+  flex: 1;
+  padding-right: 8px;
+}
+
+table.notion-table {
+  background-color: white;
+}
+
+table.notion-table th {
+  color: rgb(165, 165, 165);
+  font-weight: normal;
+  border-right: 1px solid rgb(243, 243, 243);
+  border-bottom: 1px solid rgb(221, 225, 227);
+  border-top: 1px solid rgb(221, 225, 227);
+  padding: 1px 8px 1px;
+  margin: 0px;
+}
+
+table.notion-table td {
+  border-right: 1px solid rgb(243, 243, 243);
+  border-bottom: 1px solid rgb(221, 225, 227);
+  padding: 1px 8px 1px;
+  margin: 0px;
+}
+
+.ad {
+  font-family: geneva, helvetica, arial, sans-serif;
+  font-size: 12pt;
+  background-color: #fbf0fa;
+  padding: 4px 8px;
+}
+
+.adl {
+  color: green;
+}
+
+.light {
+  color: #999999;
+}
+
+
+.blog-img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+}
+
+#container {
+  margin-left: 16pt;
+  margin-right: 16pt;
+}
+
+.hdr {
+  padding-top: 2px;
+  /* border-bottom: 1px solid #0894f1; */
+  box-shadow: 0px 3px 4px -4px #0894f1;
+}
+
+/* header with link anchor */
+.hdr-with-anchor {
+  display: flex;
+  align-items: baseline;
+}
+
+.hdr-with-anchor:hover .header-anchor {
+  display: block;
+}
+
+h1 .header-anchor {
+  transform: translateY(3px);
+}
+
+h2 .header-anchor {
+  transform: translateY(2px);
+}
+
+h3 .header-anchor {
+  transform: translateY(1px);
+}
+
+.header-anchor {
+  margin-left: 0.5rem;
+  /* background-color: lightblue;; */
+  font-size: 70%;
+  color: black;
+  display: none;
+}
+
+
+/* used in homepage.html */
+
+.underline {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 4px;
+  margin-bottom: 24px;
+}
+
+.book-cover {
+  width: 160px;
+  height: 160px;
+  margin-left: 4px;
+  margin-right: 4px;
+  object-fit: contain;
+}
+
+.book-list-headline {
+  margin-bottom: 1em;
+  margin-top: 0.5em;
+
+  text-align: center;
+  font-weight: bold;
+}
+
+#books-list {
+  justify-content: center;
+}
+
+.articles-list-wrap {
+  align-items: center;
+  line-height: 1.8;
+}
+
+.headline {
+  line-height: 1.4em;
+}
+
+#soft-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.soft-title {
+  align-self: center;
+  margin-top: 8px;
+
+  font-weight: bold;
+}
+
+.soft-card {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  margin-left: 16px;
+  box-shadow: 0 7px 14px 0 rgba(60, 66, 87, 0.1),
+    0 3px 6px 0 rgba(0, 0, 0, 0.07);
+}
+
+.soft-desc {
+  font-size: 90%;
+  max-width: 240px; /* same as soft-card-img */
+  margin-top: 8px;
+}
+
+.soft-card-img {
+  width: 240px;
+  height: 240px;
+  /* object-fit: contain; */
+}
+
+#banner-notice {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  padding-top: 1em;
+
+  font-weight: bold;
+}
+
+#banner-notice div {
+  padding: 0.5em 1em;
+  /* font-size: 10pt; */
+  border: 1px solid dodgerblue;
+  border-radius: 8px;
+  /* background-color: #fdff78; */
+}
+
+#ad-software {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 8px 2em;
+
+  border-top: 1px solid #e6e00c;
+  background-color: #fdff78;
+
+  color: #541515;
+
+  /* initially hidden, shown via javascript */
+  display: none;
+}
+
+#ad-software a {
+  color: #541515;
+  text-decoration: underline;
+  position: relative;
+}
+
+#ad-software a:hover {
+  position: relative;
+}
+
+#ad-software a:hover:after {
+  content: url("/static/documentalist-shot-320px.png");
+  display: block;
+  position: absolute;
+  left: -74px;
+  bottom: 1.5em;
+  background-color: #fdff78;
+  padding: 1em 1em;
+}
+
+/*
+Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmail.com>
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background-color: #fdfdfd;
+  color: #657b83;
+  border: 1px solid #e5e5e5;
+  overflow-x: visible;
+  font-size: 85%;
+  tab-size: 2;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #93a1a1;
+}
+
+/* Solarized Green */
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-addition {
+  color: #859900;
+}
+
+/* Solarized Cyan */
+
+.hljs-number,
+.hljs-string,
+.hljs-meta .hljs-meta-string,
+.hljs-literal,
+.hljs-doctag,
+.hljs-regexp {
+  color: #2aa198;
+}
+
+/* Solarized Blue */
+
+.hljs-title,
+.hljs-section,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #268bd2;
+}
+
+/* Solarized Yellow */
+
+.hljs-attribute,
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-class .hljs-title,
+.hljs-type {
+  color: #b58900;
+}
+
+/* Solarized Orange */
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-subst,
+.hljs-meta,
+.hljs-meta .hljs-keyword,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-link {
+  color: #cb4b16;
+}
+
+/* Solarized Red */
+
+.hljs-built_in,
+.hljs-deletion {
+  color: #dc322f;
+}
+
+.hljs-formula {
+  background: #eee8d5;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+/*
+https://raw.githubusercontent.com/google/code-prettify/master/src/prettify.css
+*/
+
+/**
+ * @license
+ * Copyright (C) 2015 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* Pretty printing styles. Used with prettify.js. */
+
+/* SPAN elements with the classes below are added by prettyprint. */
+
+.pln {
+  color: #000;
+}
+
+/* plain text */
+
+@media screen {
+  .str {
+    color: #080;
+  }
+  /* string content */
+  .kwd {
+    color: #008;
+  }
+  /* a keyword */
+  .com {
+    color: #800;
+  }
+  /* a comment */
+  .typ {
+    color: #606;
+  }
+  /* a type name */
+  .lit {
+    color: #066;
+  }
+  /* a literal value */
+  /* punctuation, lisp open bracket, lisp close bracket */
+  .pun,
+  .opn,
+  .clo {
+    color: #660;
+  }
+  .tag {
+    color: #008;
+  }
+  /* a markup tag name */
+  .atn {
+    color: #606;
+  }
+  /* a markup attribute name */
+  .atv {
+    color: #080;
+  }
+  /* a markup attribute value */
+  .dec,
+  .var {
+    color: #606;
+  }
+  /* a declaration; a variable name */
+  .fun {
+    color: red;
+  }
+  /* a function name */
+}
+
+/* Use higher contrast and text-weight for printable form. */
+
+@media print, projection {
+  .str {
+    color: #060;
+  }
+  .kwd {
+    color: #006;
+    font-weight: bold;
+  }
+  .com {
+    color: #600;
+    font-style: italic;
+  }
+  .typ {
+    color: #404;
+    font-weight: bold;
+  }
+  .lit {
+    color: #044;
+  }
+  .pun,
+  .opn,
+  .clo {
+    color: #440;
+  }
+  .tag {
+    color: #006;
+    font-weight: bold;
+  }
+  .atn {
+    color: #404;
+  }
+  .atv {
+    color: #060;
+  }
+}
+
+/* Put a border around prettyprinted code snippets. */
+
+pre.prettyprint {
+  padding: 2px;
+  border: 1px solid #888;
+}
+
+/* Specify class=linenums on a pre to get line numbering */
+
+ol.linenums {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* IE indents via margin-left */
+
+li.L0,
+li.L1,
+li.L2,
+li.L3,
+li.L5,
+li.L6,
+li.L7,
+li.L8 {
+  list-style-type: none;
+}
+
+/* Alternate shading for lines */
+
+li.L1,
+li.L3,
+li.L5,
+li.L7,
+li.L9 {
+  background: #eee;
+}
+
+.share-me {
+  font-size: 90%;
+  color: gray;
+  background-color: #f3fafd;
+  display: inline-block;
+  padding: 8px 16px;
+}
+
+.edit-link {
+  color: white;
+}
+
+.edit-link:hover {
+  color: #0894f1;
+}
+
+#msg-for-chris {
+  width: 100%;
+  height: 8em;
+}
+
+textarea {
+  font-size: 12pt;
+}
+
+#contact-form {
+  padding: 1em 2em;
+  width: 75vw;
+  position: fixed;
+  right: 8px;
+  bottom: 2em;
+  z-index: 99;
+  background-color: #f3f3f3;
+  border: 1px solid lightgray;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3), 0 0 4px rgba(0, 0, 0, 0.2);
+
+  /* initially hidden */
+  display: none;
+}
+
+#contact-form button {
+  padding: 8px 8px;
+}
+
+#contact-page-url {
+  font-size: 85%;
+  border: 0;
+  color: grey;
+  margin-left: 2px;
+  background-color: inherit;
+}
+
+form > input {
+  width: 100%;
+}
+
+form > button {
+  border: 1px solid lightgray
+}
+
+form > button:hover {
+  background-color: lightgray;
+}
+
+.contact-light {
+  font-size: 85%;
+  color: gray;
+  margin-left: 2px;
+  margin-bottom: 4px;
+}
+
+
+/* Background */
+
+/* mini tailwindcss */
+/*
+https://github.com/tachyons-css/tachyons-flexbox
+http://tachyons.io/docs/
+*/
+.sticky {
+  position: sticky;
+}
+
+.hidden {
+  display: none;
+}
+
+.top-0 {
+  top: 0;
+}
+
+.bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.flex {
+  display: flex;
+}
+.flex-col {
+  flex-direction: column;
+}
+
+.grow {
+  flex-grow: 1;
+}
+
+.items-center	{
+  align-items: center;
+}
+
+.justify-center	{
+  justify-content: center;
+}
+
+.justify-between	{
+  justify-content: space-between;
+}
+
+.px-1 {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.z-10 {
+  z-index: 10;
+}
+
+.f7 {
+  font-size: 0.75rem;
+}
+.mt1 {
+  margin-top: 0.25rem;
+}
+.mt2 {
+  margin-top: 0.5rem;
+}
+.mt3 {
+  margin-top: 1rem;
+}
+.mb6 {
+  margin-bottom: 2rem;
+}
+
+.pa1 {
+  padding: 4px;
+}
+
+.mr2 {
+  margin-right: 0.5rem;
+}
+.mr3 {
+  margin-right: 1rem;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.draft {
+  color: #ff0591;
+}
+
+code {
+  background-color: #f8f8f8;
+}
+
+/* chroma github
+https://xyproto.github.io/splash/docs/github.html
+*/
+
+.chroma {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  /* background-color: white; */
+  background-color: #f8f8f8;
+  color: #000000;
+  /* border: 1px solid #e5e5e5; */
+  /* box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); */
+  overflow-x: visible;
+  /* font-size: 85%; */
+  tab-size: 2;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 0.5em 0;
+  font-size: 10pt;
+}
+
+/* .chroma code {
+  background-color: white;
+}
+
+.chroma {
+  background-color: #ffffff;
+}
+
+.chroma .err {
+  color: #a61717;
+  background-color: #e3d2d2
+}
+
+.chroma .lnlinks {
+  outline: none;
+  text-decoration: none;
+  color: inherit
+}
+
+.chroma .lntd {
+  vertical-align: top;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+.chroma .lntable {
+  border-spacing: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+.chroma .hl {
+  background-color: #e5e5e5
+}
+
+.chroma .lnt {
+  white-space: pre;
+  -webkit-user-select: none;
+  user-select: none;
+  margin-right: 0.4em;
+  padding: 0 0.4em 0 0.4em;
+  color: #7f7f7f
+}
+
+.chroma .ln {
+  white-space: pre;
+  -webkit-user-select: none;
+  user-select: none;
+  margin-right: 0.4em;
+  padding: 0 0.4em 0 0.4em;
+  color: #7f7f7f
+}
+
+.chroma .line {
+  display: flex;
+}
+
+.chroma .k {
+  color: #000000;
+  font-weight: bold
+}
+
+.chroma .kc {
+  color: #000000;
+  font-weight: bold
+}
+
+.chroma .kd {
+  color: #000000;
+  font-weight: bold
+}
+
+.chroma .kn {
+  color: #000000;
+  font-weight: bold
+}
+
+.chroma .kp {
+  color: #000000;
+  font-weight: bold
+}
+
+.chroma .kr {
+  color: #000000;
+  font-weight: bold
+}
+
+.chroma .kt {
+  color: #445588;
+  font-weight: bold
+}
+
+.chroma .na {
+  color: #008080
+}
+
+.chroma .nb {
+  color: #0086b3
+}
+
+.chroma .bp {
+  color: #999999
+}
+
+.chroma .nc {
+  color: #445588;
+  font-weight: bold
+}
+
+.chroma .no {
+  color: #008080
+}
+
+.chroma .nd {
+  color: #3c5d5d;
+  font-weight: bold
+}
+
+.chroma .ni {
+  color: #800080
+}
+
+.chroma .ne {
+  color: #990000;
+  font-weight: bold
+}
+
+.chroma .nf {
+  color: #990000;
+  font-weight: bold
+}
+
+.chroma .nl {
+  color: #990000;
+  font-weight: bold
+}
+
+.chroma .nn {
+  color: #555555
+}
+
+.chroma .nt {
+  color: #000080
+}
+
+.chroma .nv {
+  color: #008080
+}
+
+.chroma .vc {
+  color: #008080
+}
+
+.chroma .vg {
+  color: #008080
+}
+
+.chroma .vi {
+  color: #008080
+}
+
+.chroma .s {
+  color: #dd1144
+}
+
+.chroma .sa {
+  color: #dd1144
+}
+
+.chroma .sb {
+  color: #dd1144
+}
+
+.chroma .sc {
+  color: #dd1144
+}
+
+.chroma .dl {
+  color: #dd1144
+}
+
+.chroma .sd {
+  color: #dd1144
+}
+
+.chroma .s2 {
+  color: #dd1144
+}
+
+.chroma .se {
+  color: #dd1144
+}
+
+.chroma .sh {
+  color: #dd1144
+}
+
+.chroma .si {
+  color: #dd1144
+}
+
+.chroma .sx {
+  color: #dd1144
+}
+
+.chroma .sr {
+  color: #009926
+}
+
+.chroma .s1 {
+  color: #dd1144
+}
+
+.chroma .ss {
+  color: #990073
+}
+
+.chroma .m {
+  color: #009999
+}
+
+.chroma .mb {
+  color: #009999
+}
+
+.chroma .mf {
+  color: #009999
+}
+
+.chroma .mh {
+  color: #009999
+}
+
+.chroma .mi {
+  color: #009999
+}
+
+.chroma .il {
+  color: #009999
+}
+
+.chroma .mo {
+  color: #009999
+}
+
+.chroma .o {
+  color: #000000;
+  font-weight: bold
+}
+
+.chroma .ow {
+  color: #000000;
+  font-weight: bold
+}
+
+.chroma .c {
+  color: #999988;
+  font-style: italic
+}
+
+.chroma .ch {
+  color: #999988;
+  font-style: italic
+}
+
+.chroma .cm {
+  color: #999988;
+  font-style: italic
+}
+
+.chroma .c1 {
+  color: #999988;
+  font-style: italic
+}
+
+.chroma .cs {
+  color: #999999;
+  font-weight: bold;
+  font-style: italic
+}
+
+.chroma .cp {
+  color: #999999;
+  font-weight: bold;
+  font-style: italic
+}
+
+.chroma .cpf {
+  color: #999999;
+  font-weight: bold;
+  font-style: italic
+}
+
+.chroma .gd {
+  color: #000000;
+  background-color: #ffdddd
+}
+
+.chroma .ge {
+  color: #000000;
+  font-style: italic
+}
+
+.chroma .gr {
+  color: #aa0000
+}
+
+.chroma .gh {
+  color: #999999
+}
+
+.chroma .gi {
+  color: #000000;
+  background-color: #ddffdd
+}
+
+.chroma .go {
+  color: #888888
+}
+
+.chroma .gp {
+  color: #555555
+}
+
+.chroma .gs {
+  font-weight: bold
+}
+
+.chroma .gu {
+  color: #aaaaaa
+}
+
+.chroma .gt {
+  color: #aa0000
+}
+
+.chroma .gl {
+  text-decoration: underline
+}
+
+.chroma .w {
+  color: #bbbbbb
+} */
+
+
+/* chroma igor
+https://xyproto.github.io/splash/docs/igor.html
+*/
+.bg {
+  background-color: #ffffff;
+}
+
+.chroma .lnlinks {
+  outline: none;
+  text-decoration: none;
+  color: inherit
+}
+
+.chroma .lntd {
+  vertical-align: top;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+.chroma .lntable {
+  border-spacing: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+.chroma .hl {
+  background-color: #e5e5e5
+}
+
+.chroma .lnt {
+  white-space: pre;
+  -webkit-user-select: none;
+  user-select: none;
+  margin-right: 0.4em;
+  padding: 0 0.4em 0 0.4em;
+  color: #7f7f7f
+}
+
+.chroma .ln {
+  white-space: pre;
+  -webkit-user-select: none;
+  user-select: none;
+  margin-right: 0.4em;
+  padding: 0 0.4em 0 0.4em;
+  color: #7f7f7f
+}
+
+.chroma .line {
+  display: flex;
+}
+
+.chroma .k {
+  color: #0000ff
+}
+
+.chroma .kc {
+  color: #0000ff
+}
+
+.chroma .kd {
+  color: #0000ff
+}
+
+.chroma .kn {
+  color: #0000ff
+}
+
+.chroma .kp {
+  color: #0000ff
+}
+
+.chroma .kr {
+  color: #0000ff
+}
+
+.chroma .kt {
+  color: #0000ff
+}
+
+.chroma .nc {
+  color: #007575
+}
+
+.chroma .nd {
+  color: #cc00a3
+}
+
+.chroma .nf {
+  color: #c34e00
+}
+
+.chroma .s {
+  color: #009c00
+}
+
+.chroma .sa {
+  color: #009c00
+}
+
+.chroma .sb {
+  color: #009c00
+}
+
+.chroma .sc {
+  color: #009c00
+}
+
+.chroma .dl {
+  color: #009c00
+}
+
+.chroma .sd {
+  color: #009c00
+}
+
+.chroma .s2 {
+  color: #009c00
+}
+
+.chroma .se {
+  color: #009c00
+}
+
+.chroma .sh {
+  color: #009c00
+}
+
+.chroma .si {
+  color: #009c00
+}
+
+.chroma .sx {
+  color: #009c00
+}
+
+.chroma .sr {
+  color: #009c00
+}
+
+.chroma .s1 {
+  color: #009c00
+}
+
+.chroma .ss {
+  color: #009c00
+}
+
+.chroma .c {
+  color: #ff0000;
+  font-style: italic
+}
+
+.chroma .ch {
+  color: #ff0000;
+  font-style: italic
+}
+
+.chroma .cm {
+  color: #ff0000;
+  font-style: italic
+}
+
+.chroma .c1 {
+  color: #ff0000;
+  font-style: italic
+}
+
+.chroma .cs {
+  color: #ff0000;
+  font-style: italic
+}
+
+.chroma .cp {
+  color: #ff0000;
+  font-style: italic
+}
+
+.chroma .cpf {
+  color: #ff0000;
+  font-style: italic
+}

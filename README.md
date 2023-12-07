@@ -1,6 +1,6 @@
 # Markdown Parser and HTML Renderer for Go
 
-Philip Note:  The intent is to make this render `.rtf` in a decent and fast way with
+Philip Schlump Note:  The intent is to make this render `.rtf` in a decent and fast way with
 the possibility of including the `.rtf` section into a template.   This is a fork of
 both the markdown package and the main program from  
 in `./cli/mdtohtml`.

@@ -8,27 +8,16 @@ import (
 	"runtime/pprof"
 	"strings"
 
-	"github.com/microcosm-cc/bluemonday"
 	"github.com/pschlump/markdown"
-	"github.com/pschlump/markdown/html"
+	"github.com/pschlump/markdown/md"
 	"github.com/pschlump/markdown/parser"
 )
 
 const defaultTitle = ""
 
 func main() {
-	var page, toc, xhtml, latex, smartypants, latexdashes, fractions, sanitize bool
-	var css, cpuprofile string
+	var cpuprofile string
 	var repeat int
-	flag.BoolVar(&page, "page", false, "Generate a standalone HTML page (implies -latex=false)")
-	flag.BoolVar(&toc, "toc", false, "Generate a table of contents (implies -latex=false)")
-	flag.BoolVar(&xhtml, "xhtml", true, "Use XHTML-style tags in HTML output")
-	//flag.BoolVar(&latex, "latex", false, "Generate LaTeX output instead of HTML")
-	flag.BoolVar(&sanitize, "sanitize", false, "Sanitize the HTML output")
-	flag.BoolVar(&smartypants, "smartypants", true, "Apply smartypants-style substitutions")
-	flag.BoolVar(&latexdashes, "latexdashes", true, "Use LaTeX-style dash rules for smartypants")
-	flag.BoolVar(&fractions, "fractions", true, "Use improved fraction rules for smartypants")
-	flag.StringVar(&css, "css", "", "Link to a CSS stylesheet (implies -page)")
 	flag.StringVar(&cpuprofile, "cpuprofile", "", "Write cpu profile to a file")
 	flag.IntVar(&repeat, "repeat", 1, "Process the input multiple times (for benchmarking)")
 	flag.Usage = func() {
@@ -45,17 +34,6 @@ func main() {
 		flag.PrintDefaults()
 	}
 	flag.Parse()
-
-	// enforce implied options
-	if css != "" {
-		page = true
-	}
-	if page {
-		latex = false
-	}
-	if toc {
-		latex = false
-	}
 
 	// turn on profiling?
 	if cpuprofile != "" {
@@ -96,51 +74,13 @@ func main() {
 		parser.SpaceHeadings
 
 	var renderer markdown.Renderer
-	if latex {
-		// render the data into LaTeX
-		//renderer = markdown.LatexRenderer(0)
-	} else {
-		// render the data into HTML
-		var htmlFlags html.Flags
-		if xhtml {
-			htmlFlags |= html.UseXHTML
-		}
-		if smartypants {
-			htmlFlags |= html.Smartypants
-		}
-		if fractions {
-			htmlFlags |= html.SmartypantsFractions
-		}
-		if latexdashes {
-			htmlFlags |= html.SmartypantsLatexDashes
-		}
-		title := ""
-		if page {
-			htmlFlags |= html.CompletePage
-			title = getTitle(input)
-		}
-		if toc {
-			htmlFlags |= html.TOC
-		}
-		params := html.RendererOptions{
-			Flags: htmlFlags,
-			Title: title,
-			CSS:   css,
-		}
-		renderer = html.NewRenderer(params)
-	}
+	renderer = md.NewRenderer()
 
 	// parse and render
 	var output []byte
 	for i := 0; i < repeat; i++ {
 		parser := parser.NewWithExtensions(extensions)
 		output = markdown.ToHTML(input, parser, renderer)
-	}
-
-	if sanitize {
-		// html := bluemonday.UGCPolicy().SanitizeBytes(maybeUnsafeHTML)
-		html := bluemonday.UGCPolicy().SanitizeBytes(output)
-		output = html
 	}
 
 	// output the result
@@ -161,8 +101,8 @@ func main() {
 	}
 }
 
-// try to guess the title from the input buffer
-// just check if it starts with an <h1> element and use that
+// getTitle will try to guess the title from the input buffer.
+// Just check if it starts with an <h1> element and use that.
 func getTitle(input []byte) string {
 	i := 0
 
