@@ -94,7 +94,7 @@ func TestParser_02(t *testing.T) {
 
 `),
 			expect: `Paragraph
-  Text 'dd'
+  Text 'A'
 `,
 			syntaxError: false,
 		},
@@ -123,8 +123,30 @@ Some other text 2
 - Still More List
 
 `),
-			expect: `Paragraph
-  Text 'dd'
+			expect: `Heading
+  Text 'Main Heading'
+Paragraph
+  Text 'This is a paragraph.\nOn 2 lines.'
+Heading
+  Text 'Sub Heading'
+Paragraph
+  Text 'With some text after this'
+Heading
+  Text 'A thrid'
+Paragraph
+  Text 'Some other text\n- A List\n- More Lis…'
+Paragraph
+  Text 'Some other text 2'
+List 'tight flags=start'
+  ListItem 'flags=start'
+    Paragraph
+      Text 'A List'
+  ListItem
+    Paragraph
+      Text 'More List'
+  ListItem
+    Paragraph
+      Text 'Still More List'
 `,
 			syntaxError: false,
 		},
@@ -142,7 +164,7 @@ Some other text 2
 		got := buf.String()
 
 		if db2 {
-			dbgo.Printf("%(red)got ->%s<-\n", got)
+			dbgo.Printf("%(cyan)got ->%s<-\n", got)
 		}
 
 		if test.expect != got {
