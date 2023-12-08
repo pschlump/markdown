@@ -62,7 +62,7 @@ func Parse(markdown []byte, p *parser.Parser) ast.Node {
 func Render(doc ast.Node, renderer Renderer) []byte {
 	var buf bytes.Buffer
 	renderer.RenderHeader(&buf, doc)
-	ast.WalkFunc(doc, func(node ast.Node, entering bool) ast.WalkStatus {
+	ast.WalkFunc(doc, func(node ast.Node, depth int, entering bool) ast.WalkStatus {
 		return renderer.RenderNode(&buf, node, entering)
 	})
 	renderer.RenderFooter(&buf, doc)

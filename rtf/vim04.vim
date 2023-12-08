@@ -13,19 +13,18 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +1 renderer.go
+badd +1 rtf_render.go
 badd +16 ~/go/src/github.com/therox/rtf-doc/document.go
-badd +0 ~/go/src/github.com/therox/rtf-doc/README.md
+badd +28 ~/go/src/github.com/therox/rtf-doc/README.md
+badd +0 ~/go/src/github.com/therox
 argglobal
 %argdel
 $argadd ~/go/src/github.com/therox
-$argadd renderer.go
-edit ~/go/src/github.com/therox/rtf-doc/README.md
+$argadd rtf_render.go
+edit rtf_render.go
 argglobal
-if bufexists(fnamemodify("~/go/src/github.com/therox/rtf-doc/README.md", ":p")) | buffer ~/go/src/github.com/therox/rtf-doc/README.md | else | edit ~/go/src/github.com/therox/rtf-doc/README.md | endif
-if &buftype ==# 'terminal'
-  silent file ~/go/src/github.com/therox/rtf-doc/README.md
-endif
+2argu
+balt ~/go/src/github.com/therox/rtf-doc/README.md
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -36,11 +35,11 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 17 - ((16 * winheight(0) + 32) / 65)
+let s:l = 1 - ((0 * winheight(0) + 32) / 65)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 17
+keepjumps 1
 normal! 0
 lcd ~/go/src/github.com/pschlump/markdown/rtf
 tabnext 1

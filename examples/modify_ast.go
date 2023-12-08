@@ -14,7 +14,7 @@ import (
 )
 
 func modifyAst(doc ast.Node) ast.Node {
-	ast.WalkFunc(doc, func(node ast.Node, entering bool) ast.WalkStatus {
+	ast.WalkFunc(doc, func(node ast.Node, depth int, entering bool) ast.WalkStatus {
 		if img, ok := node.(*ast.Image); ok && entering {
 			attr := img.Attribute
 			if attr == nil {

@@ -306,7 +306,7 @@ func (p *Parser) Parse(input []byte) ast.Node {
 		p.Finalize(p.tip)
 	}
 	// Walk the tree again and process inline markdown in each block
-	ast.WalkFunc(p.Doc, func(node ast.Node, entering bool) ast.WalkStatus {
+	ast.WalkFunc(p.Doc, func(node ast.Node, depth int, entering bool) ast.WalkStatus {
 		switch node.(type) {
 		case *ast.Paragraph, *ast.Heading, *ast.TableCell:
 			p.Inline(node, node.AsContainer().Content)
@@ -375,7 +375,7 @@ func (p *Parser) parseRefsToAST() {
 	finalizeList(list)
 	p.tip = above
 
-	ast.WalkFunc(block, func(node ast.Node, entering bool) ast.WalkStatus {
+	ast.WalkFunc(block, func(node ast.Node, depth int, entering bool) ast.WalkStatus {
 		switch node.(type) {
 		case *ast.Paragraph, *ast.Heading:
 			p.Inline(node, node.AsContainer().Content)

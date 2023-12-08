@@ -150,6 +150,35 @@ List 'tight flags=start'
 `,
 			syntaxError: false,
 		},
+		{ // 003
+			input: []byte(`# highlighed sections
+
+A **bold** in a paragraph.
+
+An _underscore_ in a word.
+
+An ` + "`" + `not-a-word` + "`" + ` in a block.
+
+`),
+			expect: `Heading
+  Text 'highlighed sections'
+Paragraph
+  Text 'A'
+  Strong
+    Text 'bold'
+  Text 'in a paragraph.'
+Paragraph
+  Text 'An'
+  Emph
+    Text 'underscore'
+  Text 'in a word.'
+Paragraph
+  Text 'An'
+  Code 'not-a-word'
+  Text 'in a block.'
+`,
+			syntaxError: false,
+		},
 	}
 
 	// p := New()

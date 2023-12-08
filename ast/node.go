@@ -534,34 +534,34 @@ const (
 // Called twice for every node: once with entering=true when the branch is
 // first visited, then with entering=false after all the children are done.
 type NodeVisitor interface {
-	Visit(node Node, entering bool) WalkStatus
+	Visit(node Node, depth int, entering bool) WalkStatus
 }
 
 // NodeVisitorFunc casts a function to match NodeVisitor interface
-type NodeVisitorFunc func(node Node, entering bool) WalkStatus
+type NodeVisitorFunc func(node Node, depth int, entering bool) WalkStatus
 
 // Walk traverses tree recursively
-func Walk(n Node, visitor NodeVisitor) WalkStatus {
+func Walk(n Node, depth int, visitor NodeVisitor) WalkStatus {
 	isContainer := n.AsContainer() != nil
-	status := visitor.Visit(n, true) // entering
+	status := visitor.Visit(n, depth, true) // entering
 	if status == Terminate {
 		// even if terminating, close container node
 		if isContainer {
-			visitor.Visit(n, false)
+			visitor.Visit(n, depth, false)
 		}
 		return status
 	}
 	if isContainer && status != SkipChildren {
 		children := n.GetChildren()
 		for _, n := range children {
-			status = Walk(n, visitor)
+			status = Walk(n, depth+1, visitor)
 			if status == Terminate {
 				return status
 			}
 		}
 	}
 	if isContainer {
-		status = visitor.Visit(n, false) // exiting
+		status = visitor.Visit(n, depth, false) // exiting
 		if status == Terminate {
 			return status
 		}
@@ -570,12 +570,12 @@ func Walk(n Node, visitor NodeVisitor) WalkStatus {
 }
 
 // Visit calls visitor function
-func (f NodeVisitorFunc) Visit(node Node, entering bool) WalkStatus {
-	return f(node, entering)
+func (f NodeVisitorFunc) Visit(node Node, depth int, entering bool) WalkStatus {
+	return f(node, depth, entering)
 }
 
 // WalkFunc is like Walk but accepts just a callback function
 func WalkFunc(n Node, f NodeVisitorFunc) {
 	visitor := NodeVisitorFunc(f)
-	Walk(n, visitor)
+	Walk(n, 0, visitor)
 }

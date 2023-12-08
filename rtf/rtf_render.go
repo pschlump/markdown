@@ -19,10 +19,6 @@ import (
 // Flags control optional behavior of HTML renderer.
 type Flags int
 
-// IDTag is the tag used for tag identification, it defaults to "id", some renderers
-// may wish to override this and use e.g. "anchor".
-var IDTag = "id"
-
 // HTML renderer configuration options.
 const (
 	FlagsNone               Flags = 0
@@ -47,7 +43,7 @@ const (
 	TOC                                       // Generate a table of contents
 	LazyLoadImages                            // Include loading="lazy" with images
 	FlagRTFTemplate                           // PJS: Output to be placed into a template (Similar to CompletePage)
-	FlagDoRTF                                 //
+	FlagDoRTF                                 // #22 (10 left)
 
 	CommonFlags Flags = Smartypants | SmartypantsFractions | SmartypantsDashes | SmartypantsLatexDashes
 )
@@ -357,6 +353,11 @@ func appendLanguageAttr(attrs []string, info []byte) []string {
 	return append(attrs, s)
 }
 
+// appendAttrs appends new attrs to attrs
+func appendAttrs(attrs []string, v ...string) (newAttrs []string) {
+	return append(attrs, v...)
+}
+
 func (r *Renderer) OutTag(w io.Writer, name string, attrs []string) {
 	s := name
 	if len(attrs) > 0 {
@@ -567,11 +568,13 @@ func (r *Renderer) imageEnter(w io.Writer, image *ast.Image) {
 		attrs = append(attrs, `loading="lazy"`)
 	}
 
-	s := TagWithAttributes("<img", attrs)
-	s = s[:len(s)-1] // hackish: strip off ">" from end
-	r.Outs(w, s+` src="`)
-	EscLink(w, src)
-	r.Outs(w, `" alt="`)
+	// func appendAttrs ( attrs []string, v string... ) ( newAttrs []string ) {
+	attrs = appendAttrs(attrs, fmt.Sprintf(`src=%q`, EscLink2(src)), fmt.Sprintf(`alt="`))
+	r.Outs(w, TagWithAttributes("<img", attrs))
+	// s = s[:len(s)-1] // hackish: strip off ">" from end
+	// r.Outs(w, s+` src="`)
+	// EscLink(w, src)
+	// r.Outs(w, `" alt="`)
 }
 
 func (r *Renderer) imageExit(w io.Writer, image *ast.Image) {
@@ -583,7 +586,7 @@ func (r *Renderer) imageExit(w io.Writer, image *ast.Image) {
 		r.Outs(w, `" title="`)
 		EscapeHTML(w, image.Title)
 	}
-	r.Outs(w, `" />`)
+	r.Outs(w, `" />`) // xyzzy - only XHtml
 }
 
 // Image writes ast.Image node
@@ -1336,7 +1339,7 @@ func BlockAttrs(node ast.Node) []string {
 
 	var s []string
 	if attr.ID != nil {
-		s = append(s, fmt.Sprintf(`%s="%s"`, IDTag, attr.ID))
+		s = append(s, fmt.Sprintf(`id=%q`, attr.ID))
 	}
 
 	classes := ""

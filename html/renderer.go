@@ -1183,7 +1183,7 @@ func (r *Renderer) writeTOC(w io.Writer, doc ast.Node) {
 	tocLevel := 0
 	headingCount := 0
 
-	ast.WalkFunc(doc, func(node ast.Node, entering bool) ast.WalkStatus {
+	ast.WalkFunc(doc, func(node ast.Node, depth int, entering bool) ast.WalkStatus {
 		if nodeData, ok := node.(*ast.Heading); ok && !nodeData.IsTitleblock {
 			inHeading = entering
 			if !entering {
