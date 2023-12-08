@@ -35,11 +35,13 @@ func NewRenderer() *Renderer {
 func (r *Renderer) out(w io.Writer, d []byte) {
 	r.lastOutputLen = len(d)
 	w.Write(d)
+	// io.WriteString(w, "\n")
 }
 
 func (r *Renderer) outs(w io.Writer, s string) {
 	r.lastOutputLen = len(s)
 	io.WriteString(w, s)
+	// io.WriteString(w, "\n")
 }
 
 func (r *Renderer) doubleSpace(w io.Writer) {

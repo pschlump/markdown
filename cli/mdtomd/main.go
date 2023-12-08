@@ -8,6 +8,7 @@ import (
 	"runtime/pprof"
 	"strings"
 
+	"github.com/pschlump/filelib"
 	"github.com/pschlump/markdown"
 	"github.com/pschlump/markdown/md"
 	"github.com/pschlump/markdown/parser"
@@ -86,7 +87,8 @@ func main() {
 	// output the result
 	var out *os.File
 	if len(args) == 2 {
-		if out, err = os.Create(args[1]); err != nil {
+		// if out, err = os.Create(args[1]); err != nil {
+		if out, err = filelib.Fopen(args[1], "w"); err != nil {
 			fmt.Fprintf(os.Stderr, "Error creating %s: %v", args[1], err)
 			os.Exit(-1)
 		}

@@ -228,6 +228,9 @@ func (p *Parser) addChild(node ast.Node) ast.Node {
 }
 
 func canNodeContain(n ast.Node, v ast.Node) bool {
+	//	if n == nil {
+	//		return false
+	//	}
 	switch n.(type) {
 	case *ast.List:
 		return isListItem(v)

@@ -48,10 +48,6 @@ func TestSanitizedAnchorName(t *testing.T) {
 	}
 }
 
-// todo PJS - xyzzy
-// todo PJS - xyzzy
-// todo PJS - xyzzy
-// todo PJS - xyzzy
 // func (p *Parser) Parse(input []byte) ast.Node {
 
 func TestParser_01(t *testing.T) {
@@ -86,8 +82,47 @@ func TestParser_02(t *testing.T) {
 		expect      string
 		syntaxError bool
 	}{
-		{
+		{ // 000
 			input: []byte("dd"),
+			expect: `Paragraph
+  Text 'dd'
+`,
+			syntaxError: false,
+		},
+		{ // 001
+			input: []byte(`A
+
+`),
+			expect: `Paragraph
+  Text 'dd'
+`,
+			syntaxError: false,
+		},
+		{ // 002
+			input: []byte(`
+# Main Heading
+
+This is a paragraph.
+On 2 lines.
+
+## Sub Heading
+
+With some text after this
+
+## A thrid 
+
+Some other text
+- A List
+- More List
+- Still More List
+
+Some other text 2
+
+- A List
+- More List
+- Still More List
+
+`),
 			expect: `Paragraph
   Text 'dd'
 `,
@@ -96,9 +131,11 @@ func TestParser_02(t *testing.T) {
 	}
 
 	// p := New()
-	p := NewWithExtensions(CommonExtensions)
 
 	for ii, test := range tests {
+		dbgo.Printf("%(green)Test %03d ================================ \n", ii)
+		p := NewWithExtensions(CommonExtensions)
+
 		doc := p.Parse([]byte(test.input))
 		var buf bytes.Buffer
 		ast.Print(&buf, doc)
@@ -109,7 +146,7 @@ func TestParser_02(t *testing.T) {
 		}
 
 		if test.expect != got {
-			t.Errorf("Test %d For input ->%s<- expected %s got %s\n", ii, test.input, test.expect, got)
+			t.Errorf("Test %03d For input ->%s<- expected %s got %s\n", ii, test.input, test.expect, got)
 		}
 	}
 
