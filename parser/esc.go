@@ -1,6 +1,7 @@
 package parser
 
 // isEscape returns true if byte i is prefixed by an odd number of backslahses.
+// Test: esc_test.go
 func isEscape(data []byte, i int) bool {
 	if i == 0 {
 		return false

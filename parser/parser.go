@@ -129,6 +129,8 @@ type Parser struct {
 // You can then call `doc := p.Parse(markdown)` to parse markdown document
 // and `markdown.Render(doc, renderer)` to convert it to another format with
 // a renderer.
+//
+// Test: block_test.go
 func New() *Parser {
 	return NewWithExtensions(CommonExtensions)
 }
