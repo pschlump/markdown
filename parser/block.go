@@ -736,9 +736,11 @@ func (p *Parser) htmlHr(data []byte, doRender bool) int {
 }
 
 func (p *Parser) htmlFindTag(data []byte) (string, bool) {
-	i := skipAlnum(data, 0)
-	key := string(data[:i])
-	if _, ok := blockTags[key]; ok {
+	i := skipAlnum(data, 0) // Find end of tag, so <dd>, find the >
+	// i := skipSpace(data, 0) // Skip over ' ', \t etc.
+	// dbgo.Printf("%(cyan) i=%d, data ->%s<-, data[:i]\n", i, data, data[:i])
+	key := string(data[:i])          // start from 0, to end of tag
+	if _, ok := blockTags[key]; ok { // look it up
 		return key, true
 	}
 	return "", false
