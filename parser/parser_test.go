@@ -1,73 +1,15 @@
 package parser
 
 import (
+	"bytes"
 	"testing"
+
+	"github.com/pschlump/dbgo"
+	"github.com/pschlump/markdown/ast"
 )
 
-func TestIsFenceLine(t *testing.T) {
-	tests := []struct {
-		data            []byte
-		syntaxRequested bool
-		wantEnd         int
-		wantMarker      string
-		wantSyntax      string
-	}{
-		{
-			data:       []byte("```"),
-			wantEnd:    3,
-			wantMarker: "```",
-		},
-		{
-			data:       []byte("```\nstuff here\n"),
-			wantEnd:    4,
-			wantMarker: "```",
-		},
-		{
-			data:            []byte("```\nstuff here\n"),
-			syntaxRequested: true,
-			wantEnd:         4,
-			wantMarker:      "```",
-		},
-		{
-			data:    []byte("stuff here\n```\n"),
-			wantEnd: 0,
-		},
-		{
-			data:            []byte("```"),
-			syntaxRequested: true,
-			wantEnd:         3,
-			wantMarker:      "```",
-		},
-		{
-			data:            []byte("``` go"),
-			syntaxRequested: true,
-			wantEnd:         6,
-			wantMarker:      "```",
-			wantSyntax:      "go",
-		},
-	}
-
-	for _, test := range tests {
-		var syntax *string
-		if test.syntaxRequested {
-			syntax = new(string)
-		}
-		end, marker := isFenceLine(test.data, syntax, "")
-		if got, want := end, test.wantEnd; got != want {
-			t.Errorf("got end %v, want %v", got, want)
-		}
-		if got, want := marker, test.wantMarker; got != want {
-			t.Errorf("got marker %q, want %q", got, want)
-		}
-		if test.syntaxRequested {
-			if got, want := *syntax, test.wantSyntax; got != want {
-				t.Errorf("got syntax %q, want %q", got, want)
-			}
-		}
-	}
-}
-
 func TestSanitizedAnchorName(t *testing.T) {
+	// icky! xyzzy - TODO - PJS - change this.
 	tests := []string{
 		"This is a header",
 		"this-is-a-header",
@@ -105,3 +47,72 @@ func TestSanitizedAnchorName(t *testing.T) {
 		}
 	}
 }
+
+// todo PJS - xyzzy
+// todo PJS - xyzzy
+// todo PJS - xyzzy
+// todo PJS - xyzzy
+// func (p *Parser) Parse(input []byte) ast.Node {
+
+func TestParser_01(t *testing.T) {
+	input := "| a | b |\n| - | - |\n|	foo | bar |\n"
+	p := NewWithExtensions(CommonExtensions)
+	doc := p.Parse([]byte(input))
+	var buf bytes.Buffer
+	ast.Print(&buf, doc)
+	got := buf.String()
+	exp := "Table\n  TableHeader\n    TableRow\n      TableCell\n        Text 'a'\n      TableCell\n        Text 'b'\n  TableBody\n    TableRow\n      TableCell\n        Text '\\tfoo'\n      TableCell\n        Text 'bar'\n"
+	if got != exp {
+		t.Errorf("\nInput   [%#v]\nExpected[%#v]\nGot     [%#v]\n", input, exp, got)
+	}
+}
+
+func TestParser_02(t *testing.T) {
+	/*
+		input := "| a | b |\n| - | - |\n|	foo | bar |\n"
+		p := NewWithExtensions(CommonExtensions)
+		doc := p.Parse([]byte(input))
+		var buf bytes.Buffer
+		ast.Print(&buf, doc)
+		got := buf.String()
+		exp := "Table\n  TableHeader\n    TableRow\n      TableCell\n        Text 'a'\n      TableCell\n        Text 'b'\n  TableBody\n    TableRow\n      TableCell\n        Text '\\tfoo'\n      TableCell\n        Text 'bar'\n"
+		if got != exp {
+			t.Errorf("\nInput   [%#v]\nExpected[%#v]\nGot     [%#v]\n", input, exp, got)
+		}
+	*/
+
+	tests := []struct {
+		input       []byte
+		expect      string
+		syntaxError bool
+	}{
+		{
+			input: []byte("dd"),
+			expect: `Paragraph
+  Text 'dd'
+`,
+			syntaxError: false,
+		},
+	}
+
+	// p := New()
+	p := NewWithExtensions(CommonExtensions)
+
+	for ii, test := range tests {
+		doc := p.Parse([]byte(test.input))
+		var buf bytes.Buffer
+		ast.Print(&buf, doc)
+		got := buf.String()
+
+		if db2 {
+			dbgo.Printf("%(red)got ->%s<-\n", got)
+		}
+
+		if test.expect != got {
+			t.Errorf("Test %d For input ->%s<- expected %s got %s\n", ii, test.input, test.expect, got)
+		}
+	}
+
+}
+
+const db2 = true

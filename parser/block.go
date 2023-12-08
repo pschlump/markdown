@@ -829,12 +829,16 @@ func isHRule(data []byte) bool {
 // isFenceLine checks if there's a fence line (e.g., ``` or ``` go) at the beginning of data,
 // and returns the end index if so, or 0 otherwise. It also returns the marker found.
 // If syntax is not nil, it gets set to the syntax specified in the fence line.
+//
+// Test: block_test.go
+//
+// xyzzy-Odd Stuff
 func isFenceLine(data []byte, syntax *string, oldmarker string) (end int, marker string) {
 	i, size := 0, 0
 
 	n := len(data)
 	// skip up to three spaces
-	for i < n && i < 3 && data[i] == ' ' {
+	for i < n && i < 3 && data[i] == ' ' { // xyzzy - why just spaces not tabs?
 		i++
 	}
 
@@ -842,7 +846,7 @@ func isFenceLine(data []byte, syntax *string, oldmarker string) (end int, marker
 	if i >= n {
 		return 0, ""
 	}
-	if data[i] != '~' && data[i] != '`' {
+	if data[i] != '~' && data[i] != '`' { // PJS - fence must be either "```" or "~~~" ???
 		return 0, ""
 	}
 
@@ -854,20 +858,20 @@ func isFenceLine(data []byte, syntax *string, oldmarker string) (end int, marker
 		i++
 	}
 
-	// the marker char must occur at least 3 times
+	// the marker char must occur at least 3 times		-- PJS can it be longer will, "`````" work?
 	if size < 3 {
 		return 0, ""
 	}
 	marker = string(data[i-size : i])
 
-	// if this is the end marker, it must match the beginning marker
+	// if this is the end marker, it must match the beginning marker 	-- PJS - so  ~~~~ should work and match with ~~~~
 	if oldmarker != "" && marker != oldmarker {
 		return 0, ""
 	}
 
 	// if just read the beginning marker, read the syntax
 	if oldmarker == "" {
-		i = skipChar(data, i, ' ')
+		i = skipChar(data, i, ' ') // -- PJS - odd should be able to skip whitespace(tab,blank etc)
 		if i >= n {
 			if i == n {
 				return i, marker
