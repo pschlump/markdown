@@ -9,7 +9,7 @@ import (
 	"github.com/pschlump/markdown/parser"
 )
 
-func renderHookEmpty(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
+func renderHookEmpty(w io.Writer, node ast.Node, depth int, entering bool) (ast.WalkStatus, bool) {
 	return ast.GoToNext, true
 }
 
@@ -31,7 +31,7 @@ func TestRenderNodeHookEmpty(t *testing.T) {
 	doTestsParam(t, tests, params)
 }
 
-func renderHookCodeBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
+func renderHookCodeBlock(w io.Writer, node ast.Node, depth int, entering bool) (ast.WalkStatus, bool) {
 	_, ok := node.(*ast.CodeBlock)
 	if !ok {
 		return ast.GoToNext, false
@@ -76,7 +76,7 @@ func TestRenderNodeHookLinkAttrs(t *testing.T) {
 		`<p><a class="button" href="gopher://foo.bar" target="_blank" title="Click Me">Click Me</a></p>` + "\n",
 	}
 	opts := html.RendererOptions{
-		RenderNodeHook: func(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
+		RenderNodeHook: func(w io.Writer, node ast.Node, depth int, entering bool) (ast.WalkStatus, bool) {
 			link, isLink := node.(*ast.Link)
 			if isLink {
 				link.AdditionalAttributes = append(link.AdditionalAttributes, `class="button"`)
