@@ -1,0 +1,7 @@
+# github.com/pschlump/markdown
+./markdown.go:66:49: too many arguments in call to renderer.RenderNode
+	have (*bytes.Buffer, ast.Node, int, bool)
+	want (io.Writer, ast.Node, bool)
+./markdown.go:85:14: cannot use html.NewRenderer(opts) (value of type *"github.com/pschlump/markdown/html".Renderer) as Renderer value in assignment: *"github.com/pschlump/markdown/html".Renderer does not implement Renderer (wrong type for method RenderNode)
+		have RenderNode(io.Writer, ast.Node, int, bool) ast.WalkStatus
+		want RenderNode(io.Writer, ast.Node, bool) ast.WalkStatus

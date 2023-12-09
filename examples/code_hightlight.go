@@ -61,7 +61,7 @@ func renderCode(w io.Writer, codeBlock *ast.CodeBlock, entering bool) {
 	htmlHighlight(w, string(codeBlock.Literal), lang, defaultLang)
 }
 
-func myRenderHook(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
+func myRenderHook(w io.Writer, node ast.Node, depth int, entering bool) (ast.WalkStatus, bool) {
 	if code, ok := node.(*ast.CodeBlock); ok {
 		renderCode(w, code, entering)
 		return ast.GoToNext, true

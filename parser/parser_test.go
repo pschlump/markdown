@@ -82,6 +82,7 @@ func TestParser_02(t *testing.T) {
 		expect      string
 		syntaxError bool
 	}{
+		// ------------------------------------------------------------------------
 		{ // 000
 			input: []byte("dd"),
 			expect: `Paragraph
@@ -89,6 +90,7 @@ func TestParser_02(t *testing.T) {
 `,
 			syntaxError: false,
 		},
+		// ------------------------------------------------------------------------
 		{ // 001
 			input: []byte(`A
 
@@ -98,6 +100,7 @@ func TestParser_02(t *testing.T) {
 `,
 			syntaxError: false,
 		},
+		// ------------------------------------------------------------------------
 		{ // 002
 			input: []byte(`
 # Main Heading
@@ -150,6 +153,7 @@ List 'tight flags=start'
 `,
 			syntaxError: false,
 		},
+		// ------------------------------------------------------------------------
 		{ // 003
 			input: []byte(`# highlighed sections
 
@@ -179,9 +183,68 @@ Paragraph
 `,
 			syntaxError: false,
 		},
-	}
+		// ------------------------------------------------------------------------
+		{ // 004
+			input: []byte(`# links sections
 
-	// p := New()
+Code examples:
+* https://onlinetool.io/goplayground/#txO7hJ-ibeU : basic markdown => HTML
+
+[![pkg.go.dev](https://pkg.go.dev/badge/github.com/pschlump/markdown)](https://pkg.go.dev/github.com/pschlump/markdown)
+
+For more documentation read [this guide](https://blog.kowalczyk.info/article/cxn3/advanced-markdown-processing-in-go.html)
+
+` + "```" + `go
+import (
+    "github.com/pschlump/markdown"
+)
+` + "```" + `
+
+  ` + "```" + `
+  Name    | Age
+  --------|------
+  Bob     ||
+  Alice   | 23
+  ========|======
+  Total   | 23
+  ` + "```" + `
+
+{#id3 .myclass fontsize="tiny"}
+# Header 1
+
+[Simplified BSD License](LICENSE.txt)
+`),
+			expect: `Heading
+  Text 'links sections'
+Paragraph
+  Text 'Code examples:\n*'
+  Link 'url=https://onlinetool.io/goplayground/#txO7hJ-ibeU'
+    Text 'https://onlinetool.io/goplayground/#t…'
+  Text ': basic markdown => HTML'
+Paragraph
+  Text
+  Link 'url=https://pkg.go.dev/github.com/pschlump/markdown'
+    Text
+    Image 'url=https://pkg.go.dev/badge/github.com/pschlump/markdown'
+      Text 'pkg.go.dev'
+Paragraph
+  Text 'For more documentation read'
+  Link 'url=https://blog.kowalczyk.info/article/cxn3/advanced-markdown-processing-in-go.html'
+    Text 'this guide'
+CodeBlock:go 'import (\n    "github.com/pschlump/ma…'
+CodeBlock: 'Name    | Age\n  --------|------\n …'
+Paragraph
+  Text '{#id3 .myclass fontsize="tiny"}'
+Heading
+  Text 'Header 1'
+Paragraph
+  Text
+  Link 'url=LICENSE.txt'
+    Text 'Simplified BSD License'
+`,
+			syntaxError: false,
+		},
+	}
 
 	for ii, test := range tests {
 		dbgo.Printf("%(green)Test %03d ================================ \n", ii)

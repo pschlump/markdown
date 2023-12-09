@@ -75,7 +75,7 @@ const (
 // rendering of some nodes. If it returns false, Renderer.RenderNode
 // will execute its logic. If it returns true, Renderer.RenderNode will
 // skip rendering this node and will return WalkStatus
-type RenderNodeFunc func(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool)
+type RenderNodeFunc func(w io.Writer, node ast.Node, depth int, entering bool) (ast.WalkStatus, bool)
 
 // RendererOptions is a collection of supplementary parameters tweaking
 // the behavior of various parts of HTML renderer.
@@ -198,6 +198,11 @@ func EscapeHTML2(d []byte) []byte {
 func EscLink(w io.Writer, text []byte) {
 	unesc := html.UnescapeString(string(text))
 	EscapeHTML(w, []byte(unesc))
+}
+
+func EscLink2(text []byte) []byte {
+	unesc := html.UnescapeString(string(text))
+	return EscapeHTML2([]byte(unesc))
 }
 
 // Escape writes the text to w, but skips the escape character.
@@ -1039,9 +1044,9 @@ func (r *Renderer) Index(w io.Writer, node *ast.Index) {
 }
 
 // RenderNode renders a markdown node to HTML
-func (r *Renderer) RenderNode(w io.Writer, node ast.Node, entering bool) ast.WalkStatus {
+func (r *Renderer) RenderNode(w io.Writer, node ast.Node, depth int, entering bool) ast.WalkStatus {
 	if r.Opts.RenderNodeHook != nil {
-		status, didHandle := r.Opts.RenderNodeHook(w, node, entering)
+		status, didHandle := r.Opts.RenderNodeHook(w, node, depth, entering)
 		if didHandle {
 			return status
 		}
@@ -1217,7 +1222,7 @@ func (r *Renderer) writeTOC(w io.Writer, doc ast.Node) {
 	tocLevel := 0
 	headingCount := 0
 
-	ast.WalkFunc(doc, func(node ast.Node, entering bool) ast.WalkStatus {
+	ast.WalkFunc(doc, func(node ast.Node, depth int, entering bool) ast.WalkStatus {
 		if nodeData, ok := node.(*ast.Heading); ok && !nodeData.IsTitleblock {
 			inHeading = entering
 			if !entering {
@@ -1248,7 +1253,7 @@ func (r *Renderer) writeTOC(w io.Writer, doc ast.Node) {
 		}
 
 		if inHeading {
-			return r.RenderNode(&buf, node, entering)
+			return r.RenderNode(&buf, node, depth, entering)
 		}
 
 		return ast.GoToNext

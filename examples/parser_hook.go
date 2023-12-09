@@ -57,7 +57,7 @@ func newMarkdownParser() *parser.Parser {
 	return p
 }
 
-func galleryRenderHook(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
+func galleryRenderHook(w io.Writer, node ast.Node, depth int, entering bool) (ast.WalkStatus, bool) {
 	if _, ok := node.(*Gallery); ok {
 		if entering {
 			// note: just for illustration purposes

@@ -1,7 +1,7 @@
 /*
 Package html implements HTML renderer of parsed markdown document.
 
-Configuring and customizing a renderer
+# Configuring and customizing a renderer
 
 A renderer can be configured with multiple options:
 
@@ -26,7 +26,7 @@ links or code blocks.
 
 	// a very dummy render hook that will output "code_replacements" instead of
 	// <code>${content}</code> emitted by html.Renderer
-	func renderHookCodeBlock(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
+	func renderHookCodeBlock(w io.Writer, node ast.Node, depth int, entering bool) (ast.WalkStatus, bool) {
 		_, ok := node.(*ast.CodeBlock)
 		if !ok {
 			return ast.GoToNext, false

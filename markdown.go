@@ -22,7 +22,7 @@ type Renderer interface {
 	// can ask the walker to skip a subtree of this node by returning SkipChildren.
 	// The typical behavior is to return GoToNext, which asks for the usual
 	// traversal to the next node.
-	RenderNode(w io.Writer, node ast.Node, entering bool) ast.WalkStatus
+	RenderNode(w io.Writer, node ast.Node, depth int, entering bool) ast.WalkStatus
 
 	// RenderHeader is a method that allows the renderer to produce some
 	// content preceding the main body of the output document. The header is
@@ -63,7 +63,8 @@ func Render(doc ast.Node, renderer Renderer) []byte {
 	var buf bytes.Buffer
 	renderer.RenderHeader(&buf, doc)
 	ast.WalkFunc(doc, func(node ast.Node, depth int, entering bool) ast.WalkStatus {
-		return renderer.RenderNode(&buf, node, entering)
+		return renderer.RenderNode(&buf, node, depth, entering) // xyzzy ERROR!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+		// return renderer.RenderNode(&buf, node, entering)
 	})
 	renderer.RenderFooter(&buf, doc)
 	return buf.Bytes()

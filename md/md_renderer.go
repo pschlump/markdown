@@ -285,7 +285,7 @@ func (r *Renderer) link(w io.Writer, node *ast.Link, entering bool) {
 }
 
 // RenderNode renders markdown node
-func (r *Renderer) RenderNode(w io.Writer, node ast.Node, entering bool) ast.WalkStatus {
+func (r *Renderer) RenderNode(w io.Writer, node ast.Node, depth int, entering bool) ast.WalkStatus {
 	switch node := node.(type) {
 	case *ast.Text:
 		r.text(w, node)

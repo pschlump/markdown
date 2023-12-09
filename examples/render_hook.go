@@ -20,7 +20,7 @@ func renderParagraph(w io.Writer, p *ast.Paragraph, entering bool) {
 	}
 }
 
-func myRenderHook(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
+func myRenderHook(w io.Writer, node ast.Node, depth int, entering bool) (ast.WalkStatus, bool) {
 	if para, ok := node.(*ast.Paragraph); ok {
 		renderParagraph(w, para, entering)
 		return ast.GoToNext, true
