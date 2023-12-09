@@ -170,9 +170,33 @@ func EscapeHTML(w io.Writer, d []byte) {
 	}
 }
 
+func EscapeHTML2(d []byte) []byte {
+	var buffer bytes.Buffer
+	var start, end int
+	n := len(d)
+	for end < n {
+		escSeq := Escaper[d[end]]
+		if escSeq != nil {
+			buffer.Write(d[start:end])
+			buffer.Write(escSeq)
+			start = end + 1
+		}
+		end++
+	}
+	if start < n && end <= n {
+		buffer.Write(d[start:end])
+	}
+	return buffer.Bytes()
+}
+
 func EscLink(w io.Writer, text []byte) {
 	unesc := html.UnescapeString(string(text))
 	EscapeHTML(w, []byte(unesc))
+}
+
+func EscLink2(text []byte) []byte {
+	unesc := html.UnescapeString(string(text))
+	return EscapeHTML2([]byte(unesc))
 }
 
 // Escape writes the text to w, but skips the escape character.
@@ -1126,48 +1150,90 @@ func (r *Renderer) RenderFooter(w io.Writer, _ ast.Node) {
 	io.WriteString(w, "\n</body>\n</html>\n")
 }
 
+/*
+OLD:
+
+	func (r *Renderer) writeDocumentHeader(w io.Writer) {
+		if r.Opts.Flags&CompletePage == 0 {
+			return
+		}
+		ending := ""
+		if r.Opts.Flags&UseXHTML != 0 {
+			io.WriteString(w, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" ")
+			io.WriteString(w, "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n")
+			io.WriteString(w, "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n")
+			ending = " /"
+		} else {
+			io.WriteString(w, "<!DOCTYPE html>\n")
+			io.WriteString(w, "<html>\n")
+		}
+		io.WriteString(w, "<head>\n")
+		io.WriteString(w, "  <title>")
+		if r.Opts.Flags&Smartypants != 0 {
+			r.sr.Process(w, []byte(r.Opts.Title))
+		} else {
+			EscapeHTML(w, []byte(r.Opts.Title))
+		}
+		io.WriteString(w, "</title>\n")
+		io.WriteString(w, r.Opts.Generator)
+		io.WriteString(w, "\"")
+		io.WriteString(w, ending)
+		io.WriteString(w, ">\n")
+		io.WriteString(w, "  <meta charset=\"utf-8\"")
+		io.WriteString(w, ending)
+		io.WriteString(w, ">\n")
+		if r.Opts.CSS != "" {
+			io.WriteString(w, "  <link rel=\"stylesheet\" type=\"text/css\" href=\"")
+			EscapeHTML(w, []byte(r.Opts.CSS))
+			io.WriteString(w, "\"")
+			io.WriteString(w, ending)
+			io.WriteString(w, ">\n")
+		}
+		if r.Opts.Icon != "" {
+			io.WriteString(w, "  <link rel=\"icon\" type=\"image/x-icon\" href=\"")
+			EscapeHTML(w, []byte(r.Opts.Icon))
+			io.WriteString(w, "\"")
+			io.WriteString(w, ending)
+			io.WriteString(w, ">\n")
+		}
+		if r.Opts.Head != nil {
+			w.Write(r.Opts.Head)
+		}
+		io.WriteString(w, "</head>\n")
+		io.WriteString(w, "<body>\n\n")
+	}
+*/
+
 func (r *Renderer) writeDocumentHeader(w io.Writer) {
 	if r.Opts.Flags&CompletePage == 0 {
 		return
 	}
 	ending := ""
 	if r.Opts.Flags&UseXHTML != 0 {
-		io.WriteString(w, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" ")
-		io.WriteString(w, "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n")
+		io.WriteString(w, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n")
 		io.WriteString(w, "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n")
 		ending = " /"
 	} else {
-		io.WriteString(w, "<!DOCTYPE html>\n")
-		io.WriteString(w, "<html>\n")
+		fmt.Fprintf(w, `<!DOCTYPE html>
+<html>
+`)
 	}
-	io.WriteString(w, "<head>\n")
-	io.WriteString(w, "  <title>")
+	fmt.Fprintf(w, `<head>
+  <title>`)
 	if r.Opts.Flags&Smartypants != 0 {
 		r.sr.Process(w, []byte(r.Opts.Title))
 	} else {
 		EscapeHTML(w, []byte(r.Opts.Title))
 	}
-	io.WriteString(w, "</title>\n")
-	io.WriteString(w, r.Opts.Generator)
-	io.WriteString(w, "\"")
-	io.WriteString(w, ending)
-	io.WriteString(w, ">\n")
-	io.WriteString(w, "  <meta charset=\"utf-8\"")
-	io.WriteString(w, ending)
-	io.WriteString(w, ">\n")
+	fmt.Fprintf(w, `</title>
+%s"%s>
+  <meta charset="utf-8"%s>
+`, r.Opts.Generator, ending, ending)
 	if r.Opts.CSS != "" {
-		io.WriteString(w, "  <link rel=\"stylesheet\" type=\"text/css\" href=\"")
-		EscapeHTML(w, []byte(r.Opts.CSS))
-		io.WriteString(w, "\"")
-		io.WriteString(w, ending)
-		io.WriteString(w, ">\n")
+		fmt.Fprintf(w, "  <link rel=\"stylesheet\" type=\"text/css\" href=\"%s\"%s>", EscapeHTML2([]byte(r.Opts.CSS)), ending)
 	}
 	if r.Opts.Icon != "" {
-		io.WriteString(w, "  <link rel=\"icon\" type=\"image/x-icon\" href=\"")
-		EscapeHTML(w, []byte(r.Opts.Icon))
-		io.WriteString(w, "\"")
-		io.WriteString(w, ending)
-		io.WriteString(w, ">\n")
+		fmt.Fprintf(w, "  <link rel=\"icon\" type=\"image/x-icon\" href=\"%s\"%s>", EscapeHTML2([]byte(r.Opts.Icon)), ending)
 	}
 	if r.Opts.Head != nil {
 		w.Write(r.Opts.Head)
